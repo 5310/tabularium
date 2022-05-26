@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "trusted-types": "https://cdn.skypack.dev/@types/trusted-types?dts",
+    "lit": "https://cdn.skypack.dev/lit?dts",
+    "lit/decorators": "https://cdn.skypack.dev/lit/decorators?dts",
+    "deps": "./deps/mod.ts"
+  }
+}
