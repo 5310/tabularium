@@ -1,6 +1,8 @@
+import { Tabula } from './types.ts'
 import * as to from './lib/to.ts'
+import { tabularium } from './lib/mod.ts'
 
-const root = to.parseYAML(`
+const root = tabularium.reify(to.parseYAML(`
   $:
   /: 
     name:
@@ -9,6 +11,6 @@ const root = to.parseYAML(`
       /:
         first name: John
         last name: Doe          
-`)
+`) as Tabula)
 
 console.log({root})
