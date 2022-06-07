@@ -1,11 +1,12 @@
 export const KND = '$'
-export const LBL = '.'
-export const VAL = ':'
 export const NST = '/'
+export const VAL = ':'
+export const VBL = '::'
 
-export type Value = null | undefined | boolean | number | string | ValueList | ValueObject
+export type Value = ValueSimple | ValueList | ValueObject
+export type ValueSimple = null | undefined | boolean | number | string
 export type ValueList = Value[]
-export type ValueObject = { [key: string]: Value } // ValueObject is a superset of Tabula, because TypeScript cannot model subtractive types
+export type ValueObject = { [key: string]: Value }
 
 export type Tabula = {
   [KND]: TabulaReference
@@ -18,9 +19,9 @@ export type TabulaReference = TabulaKind | TabulaPath
 export type TabulaKind = null | string
 export type TabulaPath = string
 
-export type TabulaParameter = typeof KND | typeof LBL | typeof VAL | typeof NST
+export type TabulaParameter = typeof KND | typeof NST | typeof VAL | typeof VBL
 
 export type Result = {
-  [LBL]: string
   [VAL]: Value
+  [VBL]: Value
 }

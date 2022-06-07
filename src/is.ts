@@ -1,4 +1,4 @@
-import { KND, LBL, VAL } from './types.ts'
+import { KND, VAL, VBL } from './types.ts'
 
 export const isNull = (x: unknown) => x === null
 
@@ -23,4 +23,4 @@ export const isValueDeep = (x: unknown): boolean =>
 
 export const isTabula = (x: unknown) => isObject(x) && !isUndefined((x as Record<string, unknown>)[KND])
 
-export const isResult = (x: unknown) => isObject(x) && !isUndefined((x as Record<string, unknown>)[LBL]) && !isUndefined((x as Record<string, unknown>)[VAL])
+export const isResult = (x: unknown) => isObject(x) && !isUndefined((x as Record<string, unknown>)[VBL]) && !isUndefined((x as Record<string, unknown>)[VAL])
