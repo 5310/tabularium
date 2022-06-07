@@ -1,4 +1,4 @@
-import { KND, VAL, VBL } from './types.ts'
+import { KND, VAL, VBL } from '../types.ts'
 
 export const isNull = (x: unknown) => x === null
 

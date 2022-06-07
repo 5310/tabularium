@@ -1,4 +1,4 @@
-import { yaml } from "../deps/mod.ts"
+import { yaml } from "../../deps/mod.ts"
 
 export const toString = (x: unknown) => String(x)
 
