@@ -4,9 +4,7 @@ import * as to from './to.ts'
 import * as filters from './filters.ts'
 import * as core from './tabula/mod.ts'
 
-export const deserialize = () => {}
-
-export const serialize = () => {}
+export const reify = () => {}
 
 export const resolve = () => {}
 
