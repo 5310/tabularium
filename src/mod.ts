@@ -1,1 +1,1 @@
-import './comp/tabularium.ts'
+import './comp/mod.ts'
