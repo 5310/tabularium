@@ -5,8 +5,9 @@
     "deploy": "echo WIP",
     "serve": "deno run --allow-net --allow-read -- https://deno.land/std/http/file_server.ts ./dist/ --port 3000",
     "watch": "echo WIP",
-    "bundle:deps": "deno bundle --import-map ./import-map.json ./deps/mod.ts -- ./dist/deps.js",
-    "bundle:src": "deno bundle --import-map ./import-map.json ./src/mod.ts -- ./dist/src.js"
+    "bundle:deps": "deno bundle --import-map ./import-map.json -- ./deps/mod.ts ./dist/deps.js",
+    "bundle:src": "deno bundle --import-map ./import-map.json -- ./src/mod.ts ./dist/src.js",
+    "test": "deno run --import-map ./import-map.json -- ./src/test.ts"
   },
   "compilerOptions": {
     "lib": [
