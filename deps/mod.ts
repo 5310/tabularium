@@ -1,1 +1,1 @@
- export * from './lit.ts'
+ export * as lit from './lit.ts'

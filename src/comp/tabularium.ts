@@ -1,7 +1,5 @@
-import { LitElement, css, html, customElement,
-  property,
-  state,
-} from "deps";
+import { lit } from "deps"
+const { LitElement, css, html, customElement } = lit
 
 const TAGNAME = 't-tabularium'
 
