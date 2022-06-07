@@ -17,10 +17,9 @@ export const reify = (root: Tabula): Tabula => {
   ].forEach(
     (nested) => {
       if (is.isTabula(nested)) {
-        const nested_ = nested as Tabula
-        nested_[NST] = nested_?.[NST] ?? {}
-        Object.setPrototypeOf(nested_[NST], root)
-        reify(nested_)
+        nested[NST] = nested?.[NST] ?? {}
+        Object.setPrototypeOf(nested[NST], root)
+        reify(nested)
       }
     }
   )
