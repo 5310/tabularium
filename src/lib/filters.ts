@@ -1,5 +1,14 @@
-export const capitalize = () => {}
+export const capitalize = (input: string): string => {
+  //TODO: Implement
+  return input
+}
 
-export const toLowerCase = () => {}
+export const toLowerCase = (input: string): string => {
+  //TODO: Implement
+  return input
+}
 
-export const toUpperCase = () => {}
+export const toUpperCase = (input: string): string => {
+  //TODO: Implement
+  return input
+}

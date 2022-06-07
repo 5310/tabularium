@@ -1,4 +1,4 @@
-export * from './null.ts'
+export * from './bare.ts'
 export * from './dice.ts'
 export * from './number.ts'
 export * from './text.ts'
