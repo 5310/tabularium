@@ -9,9 +9,9 @@ import * as core from './tabula/mod.ts'
  * Prototypally links a nested Tabula to allow upward resolution possible and performs other cleanup as side-effect
  */
 export const reify = (root: Tabula): Tabula => {
-  root[KND] = root[KND] ?? 'bare';
-  root[NST] = root?.[NST] ?? {};
-  [
+  root[KND] = root[KND] ?? 'bare'
+  root[NST] = root?.[NST] ?? {}
+  ;[
     ...Object.values(root), 
     ...Object.values(root?.[NST] ?? {})
   ].forEach(
