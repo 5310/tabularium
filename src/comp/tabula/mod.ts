@@ -1,4 +1,4 @@
-import './null.ts'
+import './bare.ts'
 import './dice.ts'
 import './number.ts'
 import './text.ts'
