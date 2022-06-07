@@ -2,7 +2,7 @@
 import { KND, NST, VAL, VBL, Value, Tabula, TabulaReference } from '../types.ts'
 import * as is from './is.ts'
 import * as to from './to.ts'
-import * as filters from './filters.ts'
+import * as filter from './filter.ts'
 import * as core from './tabula/mod.ts'
 
 export const reify = (root: Tabula): Tabula => {
