@@ -1,1 +1,1 @@
-export * from 'https://esm.sh/yaml@v2.1.0'
+export * from "https://esm.sh/yaml@2.1.0"
