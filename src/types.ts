@@ -16,7 +16,7 @@ export type Tabula = {
 }
 
 export type TabulaReference = TabulaKind | TabulaPath
-export type TabulaKind = null | string
+export type TabulaKind = string
 export type TabulaPath = string
 
 export type TabulaParameter = typeof KND | typeof NST | typeof VAL | typeof VBL
