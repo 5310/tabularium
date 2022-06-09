@@ -10,7 +10,7 @@ import * as core from './tabula/mod.ts'
  */
 export const reify = (context: Tabula): Tabula => {
   if (!is.isTabula(context)) return context
-  context[KND] = context[KND] ?? 'bare'
+  context[KND] = context[KND].toLowerCase() ?? 'bare'
   context[NST] = context?.[NST] ?? {}
   ;[
     ...Object.values(context), 
