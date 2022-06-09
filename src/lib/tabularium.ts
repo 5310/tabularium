@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-unused-vars
-import { KND, NST, VAL, VBL, Value, Tabula, TabulaReference } from '../types.ts'
+import { KND, NST, VAL, VBL, Value, ValueObject, Tabula, TabulaReference, Result } from '../types.ts'
 import * as is from './is.ts'
 import * as to from './to.ts'
 import * as filter from './filter.ts'
@@ -8,27 +8,27 @@ import * as core from './tabula/mod.ts'
 /**
  * Prototypally links a nested Tabula to allow upward resolution possible and performs other cleanup as side-effect
  */
-export const reify = (context: Tabula): Tabula => {
-  if (!is.isTabula(context)) return context
-  context[KND] = (context[KND] ?? 'bare').toLowerCase()
-  context[NST] = context?.[NST] ?? {}
+export const reify = (tabula: Tabula, context?: Tabula): Tabula => {
+  if (is.isReified(tabula)) return tabula
+  tabula[KND] = (tabula[KND] ?? 'bare').toLowerCase()
+  tabula[NST] = tabula?.[NST] ?? {}
+  if (!is.isUndefined(context) && context?.[NST]) Object.setPrototypeOf(tabula[NST], context?.[NST] ?? {})
   ;[
-    ...Object.values(context), 
-    ...Object.values(context?.[NST] ?? {})
+    ...Object.values(tabula), 
+    ...Object.values(tabula?.[NST] ?? {})
   ].forEach(
     (nested) => {
-      if (is.isTabula(nested)) {
-        nested[NST] = nested?.[NST] ?? {}
-        Object.setPrototypeOf(nested[NST], context?.[NST] as Record<string, Value>)
-        reify(nested)
-      }
+      if (is.isTabula(nested)) reify(nested, tabula)
     }
   )
-  return context
+  return tabula
 }
 
 
 
+/**
+ * Normalize and split paths into segments
+ */
 const pathToSegments = (path: TabulaReference) => path.toLowerCase().split(NST).map((segment) => segment.trim()).filter((segment) => !!segment)
 
 /**
@@ -77,6 +77,10 @@ const resolveDeep = (context: Tabula, path: TabulaReference): Value => {
 const resolveShallow = (context: Tabula, path: TabulaReference): Value => context?.[NST]?.[path.toLowerCase().trim()]
 
 
+
+/**
+ * Interpolate template value with the given context tabula
+ */
 export const interpolate = (context: Tabula, value: Value): Value =>  {
   // If value to interpolate is actually a string, actually interpolate it
   if (is.isString(value)) {
@@ -121,7 +125,34 @@ export const interpolate = (context: Tabula, value: Value): Value =>  {
   return value
 }
 
-export const roll = (tabula: Value, context?: Tabula): Value => {
-  //TODO: Implement
-  return tabula
-}
+
+
+export const roll = (value: Value, context?: Tabula): Value => {
+
+  if (is.isTabula(value)) {
+    // Make sure the tabula is reified and make a local clone
+    const value_ = reify(value, context)
+
+    // Interpolate the default value
+    value_[VAL] = interpolate(value_, value_[VAL])
+
+    // Recurse all local parameters
+    Object.entries(value)
+      .filter(([k]) => ![KND, VAL, VBL, NST].includes(k))
+      .forEach(([k, v]) => {
+        value_[k] = roll(v, value_)
+      })
+
+    // Try to evaluate core tabula
+    const result = roll(
+      (core as Record<string, (tabula: Tabula, context?: Tabula) => Value | Result>)?.[value_[KND]](value_), 
+      value_
+    )
+
+    // If this is a contextual roll, return only the VAL
+    if (is.isResult(result) && context) return result[VAL]
+    else return result
+  }
+
+  return value
+  }

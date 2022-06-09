@@ -1,4 +1,4 @@
-import { KND, VAL, VBL, Value, Tabula, Result } from '../types.ts'
+import { KND, VAL, VBL, NST, Value, Tabula, Result } from '../types.ts'
 
 export const isNull = (x: unknown): x is null => x === null
 
@@ -23,4 +23,6 @@ export const isValueDeep = (x: unknown): x is Value =>
 
 export const isTabula = (x: unknown): x is Tabula => isObject(x) && !isUndefined((x as Record<string, unknown>)[KND])
 
-export const isResult = (x: unknown): x is Result => isObject(x) && !isUndefined((x as Record<string, unknown>)[VBL]) && !isUndefined((x as Record<string, unknown>)[VAL])
+export const isReified = (tabula: Tabula) => !isUndefined(tabula[NST]) && Object.getPrototypeOf(tabula[NST]) !== Object.getPrototypeOf({})
+
+export const isResult = (x: unknown): x is Result => isObject(x) && !isUndefined((x as Record<string, unknown>)[VAL]) && !isUndefined((x as Record<string, unknown>)[VBL])

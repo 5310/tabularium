@@ -7,10 +7,12 @@ const root = tabularium.reify(to.parseYAML(`
   /: 
     name:
       $:
-      :: \${first name} \${last name}
+      :: \${first name|toUpperCase} \${last name}
       /:
         first name: John
-        last name: Doe       
+        last name:
+          $:
+          :: Deere
     age: 42
 `) as Tabula)
 
@@ -24,6 +26,10 @@ console.log({
     ['/name, age']: tabularium.resolve(root?.[NST]?.name as Tabula, 'age'),
   },
   interpolate: {
-    ['name, ${first name} ${last name}']: tabularium.interpolate(root?.[NST]?.name as Tabula, '${first name} ${last name|toUpperCase}'),
+    ['name, ${first name} ${last name}']: tabularium.interpolate(tabularium.resolve(root, 'name') as Tabula, '${first name} ${last name|toUpperCase}'),
+  },
+  roll: {
+    ['/']: tabularium.roll(root),
+    ['/name']: tabularium.roll(tabularium.resolve(root, 'name') as Tabula),
   }
 })
