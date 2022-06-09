@@ -1,4 +1,6 @@
-import init, { parse as parse_ } from 'https://deno.land/x/yaml_wasm@0.1.9/index.js'
+import init, {
+  parse as parse_,
+} from 'https://deno.land/x/yaml_wasm@0.1.9/index.js'
 
 await init()
 

@@ -2,9 +2,11 @@ import { yaml } from 'deps'
 
 export const toString = (x: unknown) => String(x)
 
-export const toNumber = (x: unknown) => parseFloat(toString(x).replace(/^[^0-9.]+/, ''))
+export const toNumber = (x: unknown) =>
+  parseFloat(toString(x).replace(/^[^0-9.]+/, ''))
 
-export const toInteger = (x: unknown) => parseInt(toString(x).replace(/^[^0-9.]+/, ''))
+export const toInteger = (x: unknown) =>
+  parseInt(toString(x).replace(/^[^0-9.]+/, ''))
 
 export const toYAML = (x: unknown) => yaml.stringify(x)
 

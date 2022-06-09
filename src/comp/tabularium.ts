@@ -1,4 +1,4 @@
-import { lit } from "deps"
+import { lit } from 'deps'
 const { LitElement, css, html, customElement } = lit
 
 const TAGNAME = 't-tabularium'
