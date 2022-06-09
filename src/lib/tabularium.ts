@@ -78,21 +78,33 @@ const resolveShallow = (context: Tabula, path: TabulaReference): Value => contex
 
 
 export const interpolate = (context: Tabula, value: Value): Value =>  {
+  // If value to interpolate is actually a string, actually interpolate it
   if (is.isString(value)) {
+    // Analyze the tokens to interpolate
     const pattern = /\$\{(.+?)\}/g;
     const tokens = Array.from(value.matchAll(pattern))
+
     let result = value
-    tokens.forEach(([token, reference]) => {
-      const value = roll(resolve(context, reference), context)
-      result = result.replaceAll(token, to.toString(value))
+    tokens.forEach(([token, interpolant]) => {
+      // Parse the actual reference, and separate out any filters
+      const [reference, ...filters] = interpolant.split('|').map(v => v.trim())
+      // Roll the value
+      let value = to.toString(roll(resolve(context, reference), context))
+      // If there are any valid filters, apply them
+      filters.map(f => (filter as Record<string, (input: string) => string>)[f]).filter(filter => !!filter).forEach(f => value = f(value))
+      // replace all interpolated tokens in the result
+      result = result.replaceAll(token, value)
     });
     return result
   }
 
+  // If it's an array, recurse
   if (is.isArray(value)) return value.map((v) => interpolate(context, v))
 
+  // If it's a tabuka, return it as is
   if (is.isTabula(value)) return value
 
+  // If it's an object, recurse
   if (is.isObject(value)) {
     const result = { ...value }
     let changed = false
