@@ -18,6 +18,7 @@ console.log({
   root,
   resolve: {
     ['/, name']: tabularium.resolve(root, 'name'),
+    ['/, name/first name']: tabularium.resolve(root, 'name/first name'),
     ['/name, name']: tabularium.resolve(root?.[NST]?.name as Tabula, 'name'),
     ['/name, first name']: tabularium.resolve(root?.[NST]?.name as Tabula, 'first name'),
     ['/name, age']: tabularium.resolve(root?.[NST]?.name as Tabula, 'age'),

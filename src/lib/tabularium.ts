@@ -27,21 +27,53 @@ export const reify = (context: Tabula): Tabula => {
   return context
 }
 
+
+
+/**
+ * Resolve a path to a value in a Tabula
+ * 
+ * If the path given is deeply nested, use resolveDeep, else resolveShallow.
+ */
 export const resolve = (context: Tabula, path: TabulaReference): Value => {
+  if (path.includes('/')) return resolveDeep(context, path)
+  return resolveShallow(context, path)
+}
+
+/**
+ * Resolve a deep path to a value in a Tabula
+ * 
+ * First try to resolve the full path with ownProperties, and if it doesn't resolve, check up the prototype chain as reified.
+ */
+const resolveDeep = (context: Tabula, path: TabulaReference): Value => {
   const segments = path.toLowerCase().split(NST).map((segment) => segment.trim()).filter((segment) => !!segment)
 
-  return segments.reduce(
-    (context: Value, segment: string) => {
-      console.log(context)
-      if (is.isUndefined(context)) return undefined
-      if (!is.isTabula(context)) return context
-      const nested = context?.[NST]?.[segment]
-      if (!is.isUndefined(nested)) return nested
+  // Try to resolve ownProperties
+  const result = segments.reduce(
+    (context: Value, segment, i, segments) => {
+      if (is.isTabula(context)) {
+        const result = context[NST]?.[segment]
+        if (i === segments.length - 1) return result
+        if (is.isTabula(result)) return result
+      }
       return undefined
     }, 
     context
   )
+
+  // If there's no result, try to recurse up the chain
+  const chain = Object.getPrototypeOf(context[NST])
+  if (is.isUndefined(result) && is.isTabula(chain)) return resolveDeep(chain, path)
+
+  return result
 }
+
+/**
+ * Resolve a shallow path to a value in a Tabula
+ * 
+ * Just assume the whole path is shallow and use indiomatic access.
+ */
+const resolveShallow = (context: Tabula, path: TabulaReference): Value => context?.[NST]?.[path.toLowerCase().trim()]
+
 
 export const interpolate = (context: Tabula, value: Value): Value =>  {
   //TODO: Implement
