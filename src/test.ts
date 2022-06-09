@@ -23,4 +23,7 @@ console.log({
     ['/name, first name']: tabularium.resolve(root?.[NST]?.name as Tabula, 'first name'),
     ['/name, age']: tabularium.resolve(root?.[NST]?.name as Tabula, 'age'),
   },
+  interpolate: {
+    ['name, ${first name} ${last name}']: tabularium.interpolate(root?.[NST]?.name as Tabula, '${first name} ${last name}'),
+  }
 })

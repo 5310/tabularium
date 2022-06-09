@@ -10,7 +10,7 @@ import * as core from './tabula/mod.ts'
  */
 export const reify = (context: Tabula): Tabula => {
   if (!is.isTabula(context)) return context
-  context[KND] = context[KND].toLowerCase() ?? 'bare'
+  context[KND] = (context[KND] ?? 'bare').toLowerCase()
   context[NST] = context?.[NST] ?? {}
   ;[
     ...Object.values(context), 
@@ -29,6 +29,8 @@ export const reify = (context: Tabula): Tabula => {
 
 
 
+const pathToSegments = (path: TabulaReference) => path.toLowerCase().split(NST).map((segment) => segment.trim()).filter((segment) => !!segment)
+
 /**
  * Resolve a path to a value in a Tabula
  * 
@@ -45,7 +47,7 @@ export const resolve = (context: Tabula, path: TabulaReference): Value => {
  * First try to resolve the full path with ownProperties, and if it doesn't resolve, check up the prototype chain as reified.
  */
 const resolveDeep = (context: Tabula, path: TabulaReference): Value => {
-  const segments = path.toLowerCase().split(NST).map((segment) => segment.trim()).filter((segment) => !!segment)
+  const segments = pathToSegments(path)
 
   // Try to resolve ownProperties
   const result = segments.reduce(
@@ -76,11 +78,38 @@ const resolveShallow = (context: Tabula, path: TabulaReference): Value => contex
 
 
 export const interpolate = (context: Tabula, value: Value): Value =>  {
-  //TODO: Implement
-  return
+  if (is.isString(value)) {
+    const pattern = /\$\{(.+?)\}/g;
+    const tokens = Array.from(value.matchAll(pattern))
+    let result = value
+    tokens.forEach(([token, reference]) => {
+      const value = roll(resolve(context, reference), context)
+      result = result.replaceAll(token, to.toString(value))
+    });
+    return result
+  }
+
+  if (is.isArray(value)) return value.map((v) => interpolate(context, v))
+
+  if (is.isTabula(value)) return value
+
+  if (is.isObject(value)) {
+    const result = { ...value }
+    let changed = false
+    Object.entries(value).forEach(([k, v]) => {
+      const v_ = interpolate(context, v)
+      if (v !== v_) {
+        result[k] = v_
+        changed = true
+      }
+    })
+    return changed ? result : value
+  }
+
+  return value
 }
 
-export const roll = (tabula: Tabula, context?: Tabula): Value => {
+export const roll = (tabula: Value, context?: Tabula): Value => {
   //TODO: Implement
-  return
+  return tabula
 }
