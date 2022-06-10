@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-unused-vars
-import { Value, Tabula, Result } from '../../types.ts'
+import { VAL, Tabula, Result } from '../../types.ts'
 
-export const list = (tabula: Tabula): Value | Result => {
+export const list = (tabula: Tabula): Result => {
   //TODO: Implement
-  return 'list'
+  return { [VAL]: 'list' }
 }

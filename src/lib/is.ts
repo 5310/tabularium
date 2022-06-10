@@ -1,4 +1,4 @@
-import { KND, VAL, VBL, NST, Value, Tabula, Result } from '../types.ts'
+import { KND, VAL, NST, Value, Tabula, Result } from '../types.ts'
 
 export const isNull = (x: unknown): x is null => x === null
 
@@ -16,6 +16,12 @@ export const isArray = (x: unknown): x is Array<unknown> => Array.isArray(x)
 export const isObject = (x: unknown): x is Record<string, unknown> =>
   typeof x === 'object' && !isNull(x)
 
+export const hasProperty = (x: Record<string, unknown>, property: string) =>
+  property in x
+
+export const hasOwnProperty = (x: Record<string, unknown>, property: string) =>
+  Object.hasOwn(x, property)
+
 export const isValue = (x: unknown): x is Value =>
   isNull(x) ||
   isUndefined(x) ||
@@ -32,14 +38,16 @@ export const isValueDeep = (x: unknown): x is Value =>
     ? Object.values(x as Record<string, unknown>).every(isValueDeep)
     : isValue(x)
 
-export const isTabula = (x: unknown): x is Tabula =>
-  isObject(x) && !isUndefined((x as Record<string, unknown>)[KND])
+export const isTabula = (x: unknown): x is Tabula => {
+  if (isObject(x)) return hasProperty(x as Record<string, unknown>, KND)
+  return false
+}
 
 export const isReified = (tabula: Tabula) =>
-  !isUndefined(tabula[NST]) &&
+  hasOwnProperty(tabula, NST) &&
   Object.getPrototypeOf(tabula[NST]) !== Object.getPrototypeOf({})
 
-export const isResult = (x: unknown): x is Result =>
-  isObject(x) &&
-  !isUndefined((x as Record<string, unknown>)[VAL]) &&
-  !isUndefined((x as Record<string, unknown>)[VBL])
+export const isResult = (x: unknown): x is Result => {
+  if (isObject(x)) return hasProperty(x as Record<string, unknown>, VAL)
+  return false
+}

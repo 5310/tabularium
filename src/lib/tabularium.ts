@@ -1,11 +1,9 @@
-// deno-lint-ignore-file no-unused-vars
 import {
   KND,
   NST,
   VAL,
   VBL,
   Value,
-  ValueObject,
   Tabula,
   TabulaReference,
   Result,
@@ -103,7 +101,7 @@ export const interpolate = (context: Tabula, value: Value): Value => {
         .split('|')
         .map((v) => v.trim())
       // Roll the value
-      let value = to.toString(roll(resolve(context, reference), context))
+      let value = to.toString(roll(resolve(context, reference), { context }))
       // If there are any valid filters, apply them
       filters
         .map((f) => (filter as Record<string, (input: string) => string>)[f])
@@ -138,35 +136,43 @@ export const interpolate = (context: Tabula, value: Value): Value => {
   return value
 }
 
-export const roll = (value: Value, context?: Tabula): Value => {
+export const roll = (
+  value: Value,
+  { context, result }: { context?: Tabula; result?: boolean } = {},
+): Value => {
   if (is.isTabula(value)) {
     // Make sure the tabula is reified and make a local clone
     const value_ = reify(value, context)
 
-    // Interpolate the default value
+    // Interpolate the default values
     value_[VAL] = interpolate(value_, value_[VAL])
+    value_[VBL] = interpolate(value_, value_[VBL])
 
     // Recurse all local parameters
     Object.entries(value)
       .filter(([k]) => ![KND, VAL, VBL, NST].includes(k))
       .forEach(([k, v]) => {
-        value_[k] = roll(v, value_)
+        value_[k] = roll(v, { context: value_ })
       })
 
     // Try to evaluate core tabula
-    const result = roll(
+    const result_ = roll(
       (
         core as Record<
           string,
           (tabula: Tabula, context?: Tabula) => Value | Result
         >
       )?.[value_[KND]](value_),
-      value_,
+      { context: value_ },
     )
 
-    // If this is a contextual roll, return only the VAL
-    if (is.isResult(result) && context) return result[VAL]
-    else return result
+    console.log({ value_, result_ })
+
+    // If extra result is asked, reshape return
+    if (result) return to.toResult(result_)
+
+    // And if not, unpack
+    return to.unpackResult(result_)
   }
 
   return value

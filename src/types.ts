@@ -23,5 +23,5 @@ export type TabulaParameter = typeof KND | typeof NST | typeof VAL | typeof VBL
 
 export type Result = {
   [VAL]: Value
-  [VBL]: Value
+  [VBL]?: Value
 }

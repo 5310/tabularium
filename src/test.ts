@@ -37,7 +37,12 @@ console.log({
     ),
   },
   roll: {
-    ['/']: tabularium.roll(root),
-    ['/name']: tabularium.roll(tabularium.resolve(root, 'name') as Tabula),
+    ['/']: tabularium.roll(root, { result: true }),
+    ['/name']: tabularium.roll(tabularium.resolve(root, 'name') as Tabula, {
+      result: true,
+    }),
+    ['/name/last name']: tabularium.roll(
+      tabularium.resolve(root, 'name/last name') as Tabula,
+    ),
   },
 })
