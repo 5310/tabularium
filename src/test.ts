@@ -15,6 +15,9 @@ const root = tabularium.reify(
           $:
           :: Deere
     age: 42
+    2d6:
+      $: dice
+      :: 2d6
 `) as Tabula,
 )
 
@@ -44,5 +47,8 @@ console.log({
     ['/name/last name']: tabularium.roll(
       tabularium.resolve(root, 'name/last name') as Tabula,
     ),
+    ['/2d6']: tabularium.roll(tabularium.resolve(root, '2d6') as Tabula, {
+      result: true,
+    }),
   },
 })

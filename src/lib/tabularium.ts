@@ -157,12 +157,9 @@ export const roll = (
 
     // Try to evaluate core tabula
     const result_ = roll(
-      (
-        core as Record<
-          string,
-          (tabula: Tabula, context?: Tabula) => Value | Result
-        >
-      )?.[value_[KND]](value_),
+      (core as Record<string, (tabula: Tabula, context?: Tabula) => Result>)?.[
+        value_[KND]
+      ](value_),
       { context: value_ },
     )
 
