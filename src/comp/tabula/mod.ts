@@ -1,7 +1,0 @@
-import './bare.ts'
-import './dice.ts'
-import './number.ts'
-import './text.ts'
-import './list.ts'
-import './pool.ts'
-import './procedure.ts'

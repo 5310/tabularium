@@ -1,5 +1,6 @@
 {
   "imports": {
-    "deps": "./deps/mod.ts"
+    "deps": "./src/deps/mod.ts",
+    "core": "./src/core/mod.ts"
   }
 }

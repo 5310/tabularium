@@ -1,4 +1,7 @@
-import { KND, VAL, NST, Value, Tabula, Result } from '../types.ts'
+import { TAG, NST, VAL, Value, Tabula, Result } from './types.ts'
+import { yaml } from 'deps'
+
+/* Validators */
 
 export const isNull = (x: unknown): x is null => x === null
 
@@ -18,7 +21,6 @@ export const isObject = (x: unknown): x is Record<string, unknown> =>
 
 export const hasProperty = (x: Record<string, unknown>, property: string) =>
   property in x
-
 export const hasOwnProperty = (x: Record<string, unknown>, property: string) =>
   Object.hasOwn(x, property)
 
@@ -30,7 +32,6 @@ export const isValue = (x: unknown): x is Value =>
   isString(x) ||
   isArray(x) ||
   isObject(x)
-
 export const isValueDeep = (x: unknown): x is Value =>
   isArray(x)
     ? (x as Array<unknown>).every(isValueDeep)
@@ -39,15 +40,39 @@ export const isValueDeep = (x: unknown): x is Value =>
     : isValue(x)
 
 export const isTabula = (x: unknown): x is Tabula => {
-  if (isObject(x)) return hasProperty(x as Record<string, unknown>, KND)
+  if (isObject(x)) return hasProperty(x as Record<string, unknown>, TAG)
   return false
 }
-
-export const isReified = (tabula: Tabula) =>
+export const isReifiedTabula = (tabula: Tabula) /*: tabula is ReifiedTabula*/ =>
   hasOwnProperty(tabula, NST) &&
   Object.getPrototypeOf(tabula[NST]) !== Object.getPrototypeOf({})
 
 export const isResult = (x: unknown): x is Result => {
   if (isObject(x)) return hasProperty(x as Record<string, unknown>, VAL)
   return false
+}
+
+/* Converters */
+
+export const toString = (x: unknown) => String(x)
+
+export const toNumber = (x: unknown) =>
+  parseFloat(toString(x).replace(/^[^0-9.]+/, ''))
+
+export const toInteger = (x: unknown) =>
+  parseInt(toString(x).replace(/^[^0-9.]+/, ''))
+
+export const toYAML = (x: unknown) => yaml.stringify(x)
+export const parseYAML = (x: string) => yaml.parse(x)
+
+export const toJSON = (x: unknown) => JSON.stringify(x)
+export const parseJSON = (x: string) => JSON.parse(x)
+
+export const packResult = (x: Value): Result => {
+  if (isResult(x)) return x
+  else return { [VAL]: x }
+}
+export const unpackResult = (x: Value): Value => {
+  if (isResult(x)) return x[VAL]
+  return x
 }

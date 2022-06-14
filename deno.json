@@ -1,21 +1,21 @@
 {
   "tasks": {
     "dev": "echo WIP",
-    "build": "rm -Rf ./dist && cp -r ./static ./dist && deno task bundle:deps && deno task bundle:src",
+    "build": "rm -Rf ./dist && cp -r ./static ./dist && deno task bundle:deps && deno task bundle:core",
     "deploy": "echo WIP",
     "serve": "deno run --allow-net --allow-read -- https://deno.land/std/http/file_server.ts ./dist/ --port 3000",
     "watch": "echo WIP",
-    "bundle:deps": "deno bundle --import-map ./import-map.json -- ./deps/mod.ts ./dist/deps.js",
-    "bundle:src": "deno bundle --import-map ./import-map.json -- ./src/mod.ts ./dist/src.js",
-    "test": "deno run --import-map ./import-map.json -- ./src/test.ts"
+    "bundle:deps": "deno bundle --import-map ./import-map.json -- ./src/deps/mod.ts ./dist/deps.js",
+    "bundle:core": "deno bundle --import-map ./import-map.json -- ./src/core/mod.ts ./dist/src.js",
+    "test": "echo WIP"
   },
   "compilerOptions": {
     "lib": [
-      "esnext", 
-      "dom", 
-      "dom.iterable", 
-      "dom.asynciterable", 
-      "deno.ns", 
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
       "deno.unstable"
     ],
     "strict": true,
