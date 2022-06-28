@@ -2,7 +2,7 @@ import {
   Value,
   Tabula,
   TabulaModule,
-  TabulaReference,
+  TabulaPath,
   ReifiedTabula,
   TabulatedTabula,
   Result,
@@ -113,23 +113,20 @@ export const interpolate = (target: Value, context: ReifiedTabula): Value => {
 
 export const resolve = (
   context: ReifiedTabula,
-  reference: TabulaReference,
+  reference: TabulaPath,
 ): Value => {
   if (reference.includes('/')) return resolveDeep(context, reference)
   return resolveShallow(context, reference)
 }
 
-const pathToSegments = (path: TabulaReference) =>
+const pathToSegments = (path: TabulaPath) =>
   path
     .toLowerCase()
     .split('/')
     .map((segment) => segment.trim())
     .filter((segment) => !!segment)
 
-const resolveDeep = (
-  context: ReifiedTabula,
-  reference: TabulaReference,
-): Value => {
+const resolveDeep = (context: ReifiedTabula, reference: TabulaPath): Value => {
   const segments = pathToSegments(reference)
 
   // Try to resolve ownProperties
@@ -150,10 +147,8 @@ const resolveDeep = (
   return result
 }
 
-const resolveShallow = (
-  context: ReifiedTabula,
-  reference: TabulaReference,
-): Value => context?.[reference.toLowerCase().trim()]
+const resolveShallow = (context: ReifiedTabula, reference: TabulaPath): Value =>
+  context?.[reference.toLowerCase().trim()]
 
 export const reify = (target: Tabula): void => {
   if (isNull(target.$)) target.$ = 'bare'

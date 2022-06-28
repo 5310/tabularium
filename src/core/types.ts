@@ -9,7 +9,7 @@ export type ValueObject = { [key: string]: Value }
 
 export type Tabula = {
   // Tag
-  $: TabulaReference
+  $: TabulaTag
   // Initializer
   $$?: Value
   // State
@@ -17,7 +17,6 @@ export type Tabula = {
   // Any additional parameters or nested tabula
   [key: string]: Value
 }
-export type TabulaReference = TabulaTag | TabulaPath
 export type TabulaTag = string
 export type TabulaPath = string
 
