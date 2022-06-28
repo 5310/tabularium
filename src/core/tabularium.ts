@@ -2,6 +2,7 @@ import {
   Value,
   Tabula,
   TabulaModule,
+  TabulaTag,
   TabulaPath,
   ReifiedTabula,
   TabulatedTabula,
@@ -37,7 +38,7 @@ export const tabulate = (target: Value): Result => {
     ) as TabulatedTabula
 
     // evaluate
-    const tabulas_ = tabulas as Record<string, TabulaModule>
+    const tabulas_ = tabulas as Record<TabulaTag, TabulaModule>
     const evaluation = tabulas_?.[target.$].evaluate(target_)
 
     // update
