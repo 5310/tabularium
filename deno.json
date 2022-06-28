@@ -6,7 +6,7 @@
     "serve": "deno run --allow-net --allow-read -- https://deno.land/std/http/file_server.ts ./dist/ --port 3000",
     "watch": "echo WIP",
     "bundle:deps": "deno bundle --import-map ./import-map.json -- ./src/deps/mod.ts ./dist/deps.js",
-    "bundle:core": "deno bundle --import-map ./import-map.json -- ./src/core/mod.ts ./dist/src.js",
+    "bundle:core": "deno bundle --import-map ./import-map.json -- ./src/core/mod.ts ./dist/core.js",
     "test": "echo WIP"
   },
   "compilerOptions": {

@@ -1,7 +1,7 @@
 import * as bare from './bare.ts'
-import * as dice from './dice.ts'
+import * as expr from './expr.ts'
 
 export default {
   bare,
-  dice,
+  expr,
 }

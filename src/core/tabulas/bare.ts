@@ -11,4 +11,4 @@ export const evaluate: TabulaEvaluate = (tabula) => {
   }
 }
 
-export const update: TabulaUpdate = (_) => {}
+export const update: TabulaUpdate = (_tabula, _value) => {}

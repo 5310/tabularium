@@ -1,4 +1,4 @@
-import { Value, Tabula, Result } from './types.ts'
+import { Value, Tabula, ReifiedTabula, Result } from './types.ts'
 import { yaml } from 'deps'
 
 /* Validators */
@@ -43,9 +43,7 @@ export const isTabula = (x: unknown): x is Tabula => {
   if (isObject(x)) return hasProperty(x as Record<string, unknown>, '$')
   return false
 }
-export const isReifiedTabula = (
-  tabula: Tabula,
-) /*: tabula is ReifiedTabula*/ => {
+export const isReifiedTabula = (tabula: Tabula): tabula is ReifiedTabula => {
   const proto = Object.getPrototypeOf(tabula)
   return isNull(proto) || isTabula(proto)
 }
@@ -73,9 +71,9 @@ export const parseJSON = (x: string) => JSON.parse(x)
 
 export const packResult = (x: Value): Result => {
   if (isResult(x)) return x
-  else return { value: x }
+  else return { value: x as Value }
 }
 export const unpackResult = (x: Value): Value => {
   if (isResult(x)) return x.value
-  return x
+  return x as Value
 }

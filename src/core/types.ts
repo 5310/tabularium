@@ -30,10 +30,7 @@ export type TabulaEvaluate = (tabula: TabulatedTabula) => {
   result: Result
   update: { [key: string]: Value }
 }
-export type TabulaUpdate = (
-  tabula: ReifiedTabula,
-  diff: { [key: string]: Value },
-) => void
+export type TabulaUpdate = (tabula: ReifiedTabula, value: Value) => void
 export type ReifiedTabula = Tabula
 export type TabulatedTabula = Tabula
 
