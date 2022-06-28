@@ -1,4 +1,4 @@
-import { TAG, NST, VAL, Value, Tabula, Result } from './types.ts'
+import { Value, Tabula, Result } from './types.ts'
 import { yaml } from 'deps'
 
 /* Validators */
@@ -40,15 +40,18 @@ export const isValueDeep = (x: unknown): x is Value =>
     : isValue(x)
 
 export const isTabula = (x: unknown): x is Tabula => {
-  if (isObject(x)) return hasProperty(x as Record<string, unknown>, TAG)
+  if (isObject(x)) return hasProperty(x as Record<string, unknown>, '$')
   return false
 }
-export const isReifiedTabula = (tabula: Tabula) /*: tabula is ReifiedTabula*/ =>
-  hasOwnProperty(tabula, NST) &&
-  Object.getPrototypeOf(tabula[NST]) !== Object.getPrototypeOf({})
+export const isReifiedTabula = (
+  tabula: Tabula,
+) /*: tabula is ReifiedTabula*/ => {
+  const proto = Object.getPrototypeOf(tabula)
+  return isNull(proto) || isTabula(proto)
+}
 
 export const isResult = (x: unknown): x is Result => {
-  if (isObject(x)) return hasProperty(x as Record<string, unknown>, VAL)
+  if (isObject(x)) return hasProperty(x as Record<string, unknown>, 'value')
   return false
 }
 
@@ -70,9 +73,9 @@ export const parseJSON = (x: string) => JSON.parse(x)
 
 export const packResult = (x: Value): Result => {
   if (isResult(x)) return x
-  else return { [VAL]: x }
+  else return { value: x }
 }
 export const unpackResult = (x: Value): Value => {
-  if (isResult(x)) return x[VAL]
+  if (isResult(x)) return x.value
   return x
 }

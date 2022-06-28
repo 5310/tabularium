@@ -1,12 +1,19 @@
-import { VAL, DSC, DAT, ValueObject, ReifiedTabula, Result } from '../types.ts'
+import { ValueObject, TabulaEvaluate, TabulaUpdate } from '../types.ts'
 import { toString } from '../utils.ts'
 import { dice } from 'deps'
 
-export default (tabula: ReifiedTabula): Result => {
-  const result = dice.roll(toString(tabula[DAT]))
+export const evaluate: TabulaEvaluate = (tabula) => {
+  const result = dice.roll(toString(tabula.$$)) as unknown as ValueObject
   return {
-    [VAL]: result.total,
-    [DSC]: result.renderedExpression,
-    [DAT]: result as unknown as ValueObject,
+    result: {
+      value: result.total,
+      prose: result.renderedExpression as string,
+      roll: result,
+    },
+    update: {
+      $$$: result,
+    },
   }
 }
+
+export const update: TabulaUpdate = (_) => {}
