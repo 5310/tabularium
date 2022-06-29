@@ -43,7 +43,15 @@ export const tabulate = (target: Value, persist = false): Result => {
     const result = evaluate(target_)
 
     // update
-    if (persist) update(target, result.$amend)
+    if (persist)
+      Object.entries(result.$amend ?? {}).forEach(([key, value]) => {
+        const nest = target[key]
+        if (isTabula(nest)) {
+          update(nest, value)
+        } else {
+          target[key] = value
+        }
+      })
 
     // return
     if (isTabula(result)) return tabulate(result)
@@ -57,16 +65,9 @@ export const evaluate: TabulaEvaluate = (tabula) => {
   return tabulas_?.[tabula.$].evaluate(tabula)
 }
 
-export const update: TabulaUpdate = (tabula, amend) => {
+export const update: TabulaUpdate = (tabula, value) => {
   const tabulas_ = tabulas as Record<TabulaTag, TabulaModule>
-  Object.entries(amend ?? {}).forEach(([key, value]) => {
-    const nest = tabula[key]
-    if (isTabula(nest)) {
-      tabulas_?.[nest.$].update(nest, value)
-    } else {
-      tabula[key] = value
-    }
-  })
+  tabulas_?.[tabula.$].update(tabula, value)
 }
 
 export const interpolate = (target: Value, context: ReifiedTabula): Value => {
