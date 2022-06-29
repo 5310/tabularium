@@ -15,8 +15,8 @@ const root = parseYAML(`
   interpolation, complex:
     $:
     $$: 
-      value: \${interpolation/last $[name]} $[interpolation/first $(name)]
-      brief: Introduction
+      $value: \${interpolation/last $[name]} $[interpolation/first $(name)]
+      $brief: Introduction
     name: name
   dice:
     $: expr
@@ -27,11 +27,11 @@ reify(root)
 
 const tests = Object.fromEntries(
   [
-    'value', // { value: Bond }
-    'tabula', // { value: James Bond }
-    'interpolation', // { value: Bond, James Bond }
-    'interpolation, complex', // { value: Bond, James Bond, brief: Introduciton }
-    'dice', // { value: 4..14, ... }
+    'value', // { $value: Bond }
+    'tabula', // { $value: James Bond }
+    'interpolation', // { $value: Bond, James Bond }
+    'interpolation, complex', // { $value: Bond, James Bond, $brief: Introduciton }
+    'dice', // { $value: 4..14, ... }
   ].map((reference) => [reference, tabulate(resolve(root, reference))]),
 )
 

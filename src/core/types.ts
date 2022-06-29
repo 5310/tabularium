@@ -25,10 +25,7 @@ export type TabulaModule = {
   update: TabulaUpdate
   [key: string]: unknown
 }
-export type TabulaEvaluate = (tabula: TabulatedTabula) => {
-  result: Result
-  update: { [key: string]: Value }
-}
+export type TabulaEvaluate = (tabula: TabulatedTabula) => Result
 export type TabulaUpdate = (tabula: ReifiedTabula, value: Value) => void
 export type ReifiedTabula = Tabula
 export type TabulatedTabula = Tabula
@@ -36,9 +33,10 @@ export type TabulatedTabula = Tabula
 /* Result */
 
 export type Result = {
-  value: Value
-  brief?: string
-  prose?: string
+  $value: Value
+  $brief?: string
+  $prose?: string
+  $amend?: ValueObject
   // Any additional properties
   [key: string]: Value
 }

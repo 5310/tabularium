@@ -42,7 +42,7 @@ export const tabulate = (target: Value): Result => {
     const evaluation = tabulas_?.[target.$].evaluate(target_)
 
     // update
-    Object.entries(evaluation.update).forEach(([key, value]) => {
+    Object.entries(evaluation.$amend ?? {}).forEach(([key, value]) => {
       const nest = target[key]
       if (isTabula(nest)) {
         tabulas_?.[nest.$].update(nest, value)
@@ -52,8 +52,8 @@ export const tabulate = (target: Value): Result => {
     })
 
     // return
-    if (isTabula(evaluation.result)) return tabulate(evaluation.result)
-    else return evaluation.result
+    if (isTabula(evaluation)) return tabulate(evaluation)
+    else return evaluation
   }
   return packResult(target)
 }
@@ -74,7 +74,7 @@ export const interpolate = (target: Value, context: ReifiedTabula): Value => {
           // Parse the actual reference, and separate out any filters
           const [reference, ...fs] = interpolant.split('|').map((v) => v.trim())
           // Get the template
-          let template = toString(tabulate(resolve(context, reference)).value)
+          let template = toString(tabulate(resolve(context, reference)).$value)
           // If there are any valid filters, apply them
           fs.map(
             (f) => (filters as Record<string, (input: string) => string>)[f],

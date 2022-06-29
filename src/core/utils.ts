@@ -1,4 +1,4 @@
-import { Value, Tabula, ReifiedTabula, Result } from './types.ts'
+import { Value, ValueObject, Tabula, ReifiedTabula, Result } from './types.ts'
 import { yaml } from 'deps'
 
 /* Validators */
@@ -69,11 +69,15 @@ export const parseYAML = (x: string) => yaml.parse(x)
 export const toJSON = (x: unknown) => JSON.stringify(x)
 export const parseJSON = (x: string) => JSON.parse(x)
 
-export const packResult = (x: Value): Result => {
-  if (isResult(x)) return x
-  else return { value: x as Value }
+export const packResult = (
+  $value: Value,
+  $amend?: ValueObject,
+  mixin?: ValueObject,
+): Result => {
+  if (isResult($value)) return { ...mixin, ...$value, $amend }
+  else return { ...mixin, $value, $amend }
 }
-export const unpackResult = (x: Value): Value => {
-  if (isResult(x)) return x.value
-  return x as Value
+export const unpackResult = (result: Result): Value => {
+  if (isResult(result)) return result.$value
+  return result as Value
 }
