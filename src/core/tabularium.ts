@@ -152,7 +152,7 @@ const resolveShallow = (context: ReifiedTabula, reference: TabulaPath): Value =>
   context?.[reference.toLowerCase().trim()]
 
 export const reify = (target: Tabula): void => {
-  if (isNull(target.$)) target.$ = 'bare'
+  if (isNull(target.$)) target.$ = 'blank'
   if (!isReifiedTabula(target)) Object.setPrototypeOf(target, null)
   Object.values(target).forEach((v) => {
     if (isTabula(v)) {
