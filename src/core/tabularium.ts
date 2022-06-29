@@ -6,6 +6,8 @@ import {
   TabulaPath,
   ReifiedTabula,
   TabulatedTabula,
+  TabulaEvaluate,
+  TabulaUpdate,
   Result,
 } from './types.ts'
 import {
@@ -23,7 +25,7 @@ import {
 import filters from './filters/mod.ts'
 import tabulas from './tabulas/mod.ts'
 
-export const tabulate = (target: Value, update = false): Result => {
+export const tabulate = (target: Value, persist = false): Result => {
   if (isTabula(target)) {
     // recurse & interpolate
     const target_ = Object.fromEntries(
@@ -38,25 +40,33 @@ export const tabulate = (target: Value, update = false): Result => {
     ) as TabulatedTabula
 
     // evaluate
-    const tabulas_ = tabulas as Record<TabulaTag, TabulaModule>
-    const evaluation = tabulas_?.[target.$].evaluate(target_)
+    const result = evaluate(target_)
 
     // update
-    if (update)
-      Object.entries(evaluation.$amend ?? {}).forEach(([key, value]) => {
-        const nest = target[key]
-        if (isTabula(nest)) {
-          tabulas_?.[nest.$].update(nest, value)
-        } else {
-          target[key] = value
-        }
-      })
+    if (persist) update(target, result.$amend)
 
     // return
-    if (isTabula(evaluation)) return tabulate(evaluation)
-    else return evaluation
+    if (isTabula(result)) return tabulate(result)
+    else return result
   }
   return packResult(target)
+}
+
+export const evaluate: TabulaEvaluate = (tabula) => {
+  const tabulas_ = tabulas as Record<TabulaTag, TabulaModule>
+  return tabulas_?.[tabula.$].evaluate(tabula)
+}
+
+export const update: TabulaUpdate = (tabula, amend) => {
+  const tabulas_ = tabulas as Record<TabulaTag, TabulaModule>
+  Object.entries(amend ?? {}).forEach(([key, value]) => {
+    const nest = tabula[key]
+    if (isTabula(nest)) {
+      tabulas_?.[nest.$].update(nest, value)
+    } else {
+      tabula[key] = value
+    }
+  })
 }
 
 export const interpolate = (target: Value, context: ReifiedTabula): Value => {

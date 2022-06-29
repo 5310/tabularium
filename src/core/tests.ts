@@ -32,7 +32,7 @@ const tests = Object.fromEntries(
     'interpolation', // { $value: Bond, James Bond }
     'interpolation, complex', // { $value: Bond, James Bond, $brief: Introduciton }
     'dice', // { $value: 4..14, ... }
-  ].map((reference) => [reference, tabulate(resolve(root, reference))]),
+  ].map((reference) => [reference, tabulate(resolve(root, reference), true)]),
 )
 
 export { root, tests }

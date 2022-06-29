@@ -49,7 +49,7 @@ export const isReifiedTabula = (tabula: Tabula): tabula is ReifiedTabula => {
 }
 
 export const isResult = (x: unknown): x is Result => {
-  if (isObject(x)) return hasProperty(x as Record<string, unknown>, 'value')
+  if (isObject(x)) return hasProperty(x as Record<string, unknown>, '$value')
   return false
 }
 
