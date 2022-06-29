@@ -23,7 +23,7 @@ import {
 import filters from './filters/mod.ts'
 import tabulas from './tabulas/mod.ts'
 
-export const tabulate = (target: Value): Result => {
+export const tabulate = (target: Value, update = false): Result => {
   if (isTabula(target)) {
     // recurse & interpolate
     const target_ = Object.fromEntries(
@@ -42,14 +42,15 @@ export const tabulate = (target: Value): Result => {
     const evaluation = tabulas_?.[target.$].evaluate(target_)
 
     // update
-    Object.entries(evaluation.$amend ?? {}).forEach(([key, value]) => {
-      const nest = target[key]
-      if (isTabula(nest)) {
-        tabulas_?.[nest.$].update(nest, value)
-      } else {
-        target[key] = value
-      }
-    })
+    if (update)
+      Object.entries(evaluation.$amend ?? {}).forEach(([key, value]) => {
+        const nest = target[key]
+        if (isTabula(nest)) {
+          tabulas_?.[nest.$].update(nest, value)
+        } else {
+          target[key] = value
+        }
+      })
 
     // return
     if (isTabula(evaluation)) return tabulate(evaluation)
